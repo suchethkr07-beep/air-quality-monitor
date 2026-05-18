@@ -1,0 +1,266 @@
+:root {
+  --bg: #eef1f6;
+  --panel: #f7f8fb;
+  --panel-border: #d9dde6;
+  --text: #1f2330;
+  --muted: #778096;
+  --status-ok: #2daf6f;
+  --status-warn: #e39a17;
+  --status-err: #b91c1c;
+  --status-busy: #3b82f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.appShell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 12px 14px 16px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.titleBlock h1 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: -0.5px;
+}
+
+.sub {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.statusWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #4f5768;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #9aa3b5;
+}
+
+.statusDot[data-kind="ok"] {
+  background: var(--status-ok);
+}
+.statusDot[data-kind="warn"] {
+  background: var(--status-warn);
+}
+.statusDot[data-kind="err"] {
+  background: var(--status-err);
+}
+.statusDot[data-kind="busy"] {
+  background: var(--status-busy);
+}
+
+.sensorDefs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.defCard h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.defCard p {
+  margin: 0;
+  line-height: 1.45;
+  color: #5a6378;
+  font-size: 13px;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.metricCard {
+  --metric-color: #35a667;
+  --metric-border: #97d9b3;
+  --metric-bg: #e8f5ee;
+  border: 1px solid var(--metric-border);
+  background: var(--metric-bg);
+}
+
+.metricCard h3 {
+  margin: 0 0 8px;
+  color: #646d80;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+
+.valueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.value {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--metric-color);
+}
+
+.unit {
+  color: var(--metric-color);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.state {
+  margin-top: 6px;
+  color: var(--metric-color);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.rangeText {
+  margin-top: 6px;
+  color: #5f687a;
+  font-size: 12px;
+}
+
+.panelTitle {
+  color: #737d92;
+  letter-spacing: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.chartPanel {
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.chartPanel canvas {
+  width: 100%;
+  height: 125px;
+  max-height: 125px;
+}
+
+.scaleGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.scaleCard {
+  padding-top: 10px;
+}
+
+.scaleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 9px;
+  padding: 7px 9px;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.scaleGood {
+  background: #e1f2e8;
+  color: #1f8f54;
+}
+
+.scaleWarn {
+  background: #f8efd9;
+  color: #c77a00;
+}
+
+.scaleBad {
+  background: #f9e4df;
+  color: #d9462f;
+}
+
+.scaleDanger {
+  background: #1c2133;
+  color: #f2f4f8;
+}
+
+.connectionPanel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.connectionItem {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  color: #4d5568;
+  font-size: 12px;
+}
+
+.mono {
+  font-family: Consolas, "Courier New", monospace;
+}
+
+@media (max-width: 980px) {
+  .metricGrid,
+  .scaleGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sensorDefs {
+    grid-template-columns: 1fr;
+  }
+
+  .connectionPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .titleBlock h1 {
+    font-size: 27px;
+  }
+
+  .value {
+    font-size: 40px;
+  }
+
+  .unit {
+    font-size: 21px;
+  }
+}

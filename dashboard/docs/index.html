@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Air Quality Monitor</title>
+    <meta name="theme-color" content="#eceff4" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="appShell">
+      <header class="header">
+        <div class="titleBlock">
+          <h1>Air Quality Monitor</h1>
+          <p class="sub">
+            ESP8266 + DHT11 + MQ Sensor -> Firebase Realtime Database
+          </p>
+        </div>
+        <div class="statusWrap">
+          <span id="statusDot" class="statusDot" aria-hidden="true"></span>
+          <span id="statusText">Not connected</span>
+        </div>
+      </header>
+
+      <section class="sensorDefs panel">
+        <article class="defCard">
+          <h2>DHT11 Sensor</h2>
+          <p>
+            Measures ambient temperature and relative humidity. This sensor is used
+            to detect heat stress and indoor comfort trends.
+          </p>
+        </article>
+        <article class="defCard">
+          <h2>MQ-135 Sensor</h2>
+          <p>
+            Detects air quality changes from gases such as ammonia, smoke, and CO2.
+            Higher ADC values usually indicate poorer air quality.
+          </p>
+        </article>
+      </section>
+
+      <section class="metricGrid">
+        <article id="tempCard" class="metricCard panel">
+          <h3>TEMPERATURE</h3>
+          <div class="valueRow">
+            <span id="tempVal" class="value">--</span>
+            <span class="unit">C</span>
+          </div>
+          <div id="tempState" class="state">Waiting for data</div>
+          <div class="rangeText">0 to 50 C</div>
+        </article>
+
+        <article id="humCard" class="metricCard panel">
+          <h3>HUMIDITY</h3>
+          <div class="valueRow">
+            <span id="humVal" class="value">--</span>
+            <span class="unit">%</span>
+          </div>
+          <div id="humState" class="state">Waiting for data</div>
+          <div class="rangeText">0 to 100 %</div>
+        </article>
+
+        <article id="gasCard" class="metricCard panel">
+          <h3>AIR QUALITY (MQ)</h3>
+          <div class="valueRow">
+            <span id="gasVal" class="value">--</span>
+            <span class="unit">AQI</span>
+          </div>
+          <div id="gasState" class="state">Waiting for data</div>
+          <div class="rangeText">0 to 400+ AQI</div>
+        </article>
+      </section>
+
+      <section class="scaleGrid">
+        <article class="panel scaleCard">
+          <div class="panelTitle">TEMPERATURE SCALE</div>
+          <div class="scaleRow scaleGood"><span>Normal</span><span>< 25 C</span></div>
+          <div class="scaleRow scaleWarn"><span>Warm</span><span>25 to 30 C</span></div>
+          <div class="scaleRow scaleBad"><span>Hot</span><span>30 to 38 C</span></div>
+          <div class="scaleRow scaleDanger"><span>Danger</span><span>>= 38 C</span></div>
+        </article>
+
+        <article class="panel scaleCard">
+          <div class="panelTitle">HUMIDITY SCALE</div>
+          <div class="scaleRow scaleWarn"><span>Very Dry</span><span>< 25 %</span></div>
+          <div class="scaleRow scaleGood"><span>Comfortable</span><span>25 to 60 %</span></div>
+          <div class="scaleRow scaleBad"><span>Humid</span><span>60 to 80 %</span></div>
+          <div class="scaleRow scaleDanger"><span>Very Humid</span><span>>= 80 %</span></div>
+        </article>
+
+        <article class="panel scaleCard">
+          <div class="panelTitle">AIR QUALITY SCALE (AQI)</div>
+          <div class="scaleRow scaleGood"><span>Good</span><span>0 to 100</span></div>
+          <div class="scaleRow scaleWarn"><span>Moderate</span><span>101 to 200</span></div>
+          <div class="scaleRow scaleBad"><span>Unhealthy</span><span>201 to 300</span></div>
+          <div class="scaleRow scaleDanger"><span>Hazardous</span><span>>= 301</span></div>
+        </article>
+      </section>
+
+      <section class="panel connectionPanel">
+        <div class="connectionItem">
+          <span>Updated:</span>
+          <strong id="updatedAt">--</strong>
+        </div>
+        <div class="connectionItem">
+          <span>Path:</span>
+          <strong class="mono">/sensor/latest</strong>
+        </div>
+        <div class="connectionItem">
+          <span>Project:</span>
+          <strong id="projectId">--</strong>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
