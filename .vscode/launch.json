@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dashboard in Chrome",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost:5173/dashboard/",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Dashboard in Edge",
+      "type": "pwa-msedge",
+      "request": "launch",
+      "url": "http://localhost:5173/dashboard/",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}
