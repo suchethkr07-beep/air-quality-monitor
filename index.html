@@ -1,493 +1,119 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Whistle Counter</title>
-  <style>
-    :root {
-      --bg: #f5efe4;
-      --panel: #fffaf0;
-      --ink: #1f2a2e;
-      --accent: #d96c3d;
-      --accent-soft: #f3c7a8;
-      --muted: #617076;
-      --ok: #2f7d4a;
-      --warn: #a44c29;
-      --border: #d8ccb8;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      font-family: Georgia, "Times New Roman", serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at top, rgba(243, 199, 168, 0.85), transparent 38%),
-        linear-gradient(180deg, #efe5d1 0%, var(--bg) 55%, #e8ddc8 100%);
-    }
-
-    .app {
-      width: min(100%, 720px);
-      background: color-mix(in srgb, var(--panel) 92%, white);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 24px 60px rgba(60, 40, 20, 0.12);
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
-
-    p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .panel-grid {
-      display: grid;
-      gap: 16px;
-      margin-top: 24px;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-
-    .card {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px;
-      background: rgba(255, 250, 240, 0.8);
-    }
-
-    .label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-    }
-
-    .big {
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .meter {
-      position: relative;
-      height: 14px;
-      border-radius: 999px;
-      overflow: hidden;
-      background: #eadfcb;
-      border: 1px solid var(--border);
-      margin-top: 12px;
-    }
-
-    .meter-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent-soft), var(--accent));
-      transition: width 80ms linear;
-    }
-
-    .status {
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: #f8f1e4;
-      border: 1px solid var(--border);
-      color: var(--warn);
-      font-weight: 600;
-    }
-
-    .status.active {
-      color: var(--ok);
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    button {
-      border: 0;
-      border-radius: 999px;
-      padding: 12px 18px;
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      color: white;
-      background: var(--accent);
-      transition: transform 120ms ease, opacity 120ms ease;
-    }
-
-    button.secondary {
-      background: #7b8b8f;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-    button:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .notes {
-      margin-top: 20px;
-      font-size: 0.95rem;
-      color: var(--muted);
-    }
-  </style>
-</head>
-<body>
-  <main class="app">
-    <h1>Whistle Counter</h1>
-    <p>Uses your microphone, runs an FFT with the Web Audio API, and counts distinct whistles when strong energy appears in the 6-7 kHz band.</p>
-
-    <section class="panel-grid">
-      <div class="card">
-        <span class="label">Whistle Count</span>
-        <div id="count" class="big">0</div>
-      </div>
-
-      <div class="card">
-        <span class="label">Target Whistles</span>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-          <input id="targetInput" type="number" min="1" step="1" value="10" inputmode="numeric"
-            style="flex: 1 1 120px; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--border); background: rgba(255,255,255,0.7); font: inherit; font-weight: 700; color: var(--ink);"
-            aria-label="Target whistle count">
-          <button id="setTargetButton" class="secondary" style="padding: 10px 14px;">Set</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Air Quality Monitor</title>
+    <meta name="theme-color" content="#eceff4" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="appShell">
+      <header class="header">
+        <div class="titleBlock">
+          <h1>Air Quality Monitor</h1>
+          <p class="sub">
+            ESP8266 + DHT11 + MQ Sensor -> Firebase Realtime Database
+          </p>
         </div>
-        <div style="margin-top: 10px; color: var(--muted); font-weight: 700;">
-          Target: <span id="targetText">10</span>
+        <div class="statusWrap">
+          <span id="statusDot" class="statusDot" aria-hidden="true"></span>
+          <span id="statusText">Not connected</span>
         </div>
-      </div>
+      </header>
 
-      <div class="card">
-        <span class="label">6-7 kHz Energy</span>
-        <div id="energyText" class="big">0.00</div>
-        <div class="meter" aria-hidden="true">
-          <div id="energyMeter" class="meter-fill"></div>
+      <section class="sensorDefs panel">
+        <article class="defCard">
+          <h2>DHT11 Sensor</h2>
+          <p>
+            Measures ambient temperature and relative humidity. This sensor is used
+            to detect heat stress and indoor comfort trends.
+          </p>
+        </article>
+        <article class="defCard">
+          <h2>MQ-135 Sensor</h2>
+          <p>
+            Detects air quality changes from gases such as ammonia, smoke, and CO2.
+            Higher ADC values usually indicate poorer air quality.
+          </p>
+        </article>
+      </section>
+
+      <section class="metricGrid">
+        <article id="tempCard" class="metricCard panel">
+          <h3>TEMPERATURE</h3>
+          <div class="valueRow">
+            <span id="tempVal" class="value">--</span>
+            <span class="unit">C</span>
+          </div>
+          <div id="tempState" class="state">Waiting for data</div>
+          <div class="rangeText">0 to 50 C</div>
+        </article>
+
+        <article id="humCard" class="metricCard panel">
+          <h3>HUMIDITY</h3>
+          <div class="valueRow">
+            <span id="humVal" class="value">--</span>
+            <span class="unit">%</span>
+          </div>
+          <div id="humState" class="state">Waiting for data</div>
+          <div class="rangeText">0 to 100 %</div>
+        </article>
+
+        <article id="gasCard" class="metricCard panel">
+          <h3>AIR QUALITY (MQ)</h3>
+          <div class="valueRow">
+            <span id="gasVal" class="value">--</span>
+            <span class="unit">AQI</span>
+          </div>
+          <div id="gasState" class="state">Waiting for data</div>
+          <div class="rangeText">0 to 400+ AQI</div>
+        </article>
+      </section>
+
+      <section class="scaleGrid">
+        <article class="panel scaleCard">
+          <div class="panelTitle">TEMPERATURE SCALE</div>
+          <div class="scaleRow scaleGood"><span>Normal</span><span>< 25 C</span></div>
+          <div class="scaleRow scaleWarn"><span>Warm</span><span>25 to 30 C</span></div>
+          <div class="scaleRow scaleBad"><span>Hot</span><span>30 to 38 C</span></div>
+          <div class="scaleRow scaleDanger"><span>Danger</span><span>>= 38 C</span></div>
+        </article>
+
+        <article class="panel scaleCard">
+          <div class="panelTitle">HUMIDITY SCALE</div>
+          <div class="scaleRow scaleWarn"><span>Very Dry</span><span>< 25 %</span></div>
+          <div class="scaleRow scaleGood"><span>Comfortable</span><span>25 to 60 %</span></div>
+          <div class="scaleRow scaleBad"><span>Humid</span><span>60 to 80 %</span></div>
+          <div class="scaleRow scaleDanger"><span>Very Humid</span><span>>= 80 %</span></div>
+        </article>
+
+        <article class="panel scaleCard">
+          <div class="panelTitle">AIR QUALITY SCALE (AQI)</div>
+          <div class="scaleRow scaleGood"><span>Good</span><span>0 to 100</span></div>
+          <div class="scaleRow scaleWarn"><span>Moderate</span><span>101 to 200</span></div>
+          <div class="scaleRow scaleBad"><span>Unhealthy</span><span>201 to 300</span></div>
+          <div class="scaleRow scaleDanger"><span>Hazardous</span><span>>= 301</span></div>
+        </article>
+      </section>
+
+      <section class="panel connectionPanel">
+        <div class="connectionItem">
+          <span>Updated:</span>
+          <strong id="updatedAt">--</strong>
         </div>
-      </div>
-
-      <div class="card">
-        <span class="label">Detector</span>
-        <div id="detectorState" class="big" style="font-size: 1.6rem;">Idle</div>
-      </div>
-    </section>
-
-    <div id="status" class="status">Click Start to allow microphone access.</div>
-
-    <div class="actions">
-      <button id="startButton">Start Listening</button>
-      <button id="resetButton" class="secondary" disabled>Reset Count</button>
-      <button id="stopAlarmButton" class="secondary" disabled>Stop Alarm</button>
+        <div class="connectionItem">
+          <span>Path:</span>
+          <strong class="mono">/sensor/latest</strong>
+        </div>
+        <div class="connectionItem">
+          <span>Project:</span>
+          <strong id="projectId">--</strong>
+        </div>
+      </section>
     </div>
 
-    <p class="notes">Tip: keep background noise low. The detector waits for the high-frequency energy to rise above a threshold and then fall back down before counting another whistle. The alarm is intentionally loud, so lower your volume before testing.</p>
-  </main>
-
-  <script>
-    const countEl = document.getElementById("count");
-    const energyTextEl = document.getElementById("energyText");
-    const energyMeterEl = document.getElementById("energyMeter");
-    const detectorStateEl = document.getElementById("detectorState");
-    const statusEl = document.getElementById("status");
-    const startButton = document.getElementById("startButton");
-    const resetButton = document.getElementById("resetButton");
-    const stopAlarmButton = document.getElementById("stopAlarmButton");
-    const targetInputEl = document.getElementById("targetInput");
-    const setTargetButton = document.getElementById("setTargetButton");
-    const targetTextEl = document.getElementById("targetText");
-
-    let audioContext;
-    let analyser;
-    let source;
-    let microphoneStream;
-    let frequencyData;
-    let animationFrameId;
-    let whistleCount = 0;
-    let whistleActive = false;
-    let countingEnabled = true;
-
-    let targetWhistles = 10;
-    let alarmIntervalId;
-    let alarmNodes = null;
-
-    const FFT_SIZE = 2048;
-    const TARGET_LOW_HZ = 6000;
-    const TARGET_HIGH_HZ = 7000;
-    const START_THRESHOLD = 0.33;
-    const STOP_THRESHOLD = 0.2;
-
-    function updateStatus(message, active = false) {
-      statusEl.textContent = message;
-      statusEl.classList.toggle("active", active);
-    }
-
-    function setDetectorState(text, active = false) {
-      detectorStateEl.textContent = text;
-      detectorStateEl.style.color = active ? "var(--ok)" : "var(--accent)";
-    }
-
-    function updateCount() {
-      countEl.textContent = String(whistleCount);
-    }
-
-    function clampToInt(value, fallback) {
-      const n = Number(value);
-      if (!Number.isFinite(n)) return fallback;
-      const i = Math.floor(n);
-      return i >= 1 ? i : fallback;
-    }
-
-    function setTarget(nextTarget) {
-      targetWhistles = clampToInt(nextTarget, 10);
-      targetTextEl.textContent = String(targetWhistles);
-      targetInputEl.value = String(targetWhistles);
-    }
-
-    function promptForTargetIfNeeded() {
-      const raw = String(targetInputEl.value ?? "").trim();
-      if (raw.length > 0) {
-        setTarget(raw);
-        return;
-      }
-      const response = window.prompt("How many whistles do you want to count?", String(targetWhistles));
-      if (response === null) return; // user canceled
-      setTarget(response);
-    }
-
-    function stopAlarm() {
-      if (alarmIntervalId) {
-        window.clearInterval(alarmIntervalId);
-        alarmIntervalId = undefined;
-      }
-      if (alarmNodes) {
-        try {
-          alarmNodes.osc1.stop();
-          alarmNodes.osc2.stop();
-        } catch {}
-        try {
-          alarmNodes.osc1.disconnect();
-          alarmNodes.osc2.disconnect();
-          alarmNodes.gain.disconnect();
-          alarmNodes.compressor.disconnect();
-        } catch {}
-        alarmNodes = null;
-      }
-      stopAlarmButton.disabled = true;
-    }
-
-    // A "morning alarm" style repeating two-tone beep.
-    function startAlarm() {
-      if (!audioContext) return;
-      if (alarmNodes) return; // already playing
-
-      const compressor = audioContext.createDynamicsCompressor();
-      compressor.threshold.value = -18;
-      compressor.knee.value = 18;
-      compressor.ratio.value = 10;
-      compressor.attack.value = 0.003;
-      compressor.release.value = 0.18;
-
-      const gain = audioContext.createGain();
-      gain.gain.value = 0.0001;
-
-      const osc1 = audioContext.createOscillator();
-      osc1.type = "sawtooth";
-      osc1.frequency.value = 880;
-
-      const osc2 = audioContext.createOscillator();
-      osc2.type = "square";
-      osc2.frequency.value = 660;
-
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(compressor);
-      compressor.connect(audioContext.destination);
-
-      osc1.start();
-      osc2.start();
-
-      alarmNodes = { osc1, osc2, gain, compressor };
-      stopAlarmButton.disabled = false;
-
-      const schedule = () => {
-        const now = audioContext.currentTime;
-        const attack = 0.01;
-        const on = 0.18;
-        const gap = 0.12;
-
-        // Two quick beeps, then a short pause.
-        gain.gain.cancelScheduledValues(now);
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.linearRampToValueAtTime(0.8, now + attack);
-        gain.gain.linearRampToValueAtTime(0.0001, now + attack + on);
-
-        const t2 = now + attack + on + gap;
-        gain.gain.setValueAtTime(0.0001, t2);
-        gain.gain.linearRampToValueAtTime(0.8, t2 + attack);
-        gain.gain.linearRampToValueAtTime(0.0001, t2 + attack + on);
-      };
-
-      schedule();
-      alarmIntervalId = window.setInterval(schedule, 700);
-    }
-
-    function resetCount() {
-      stopAlarm();
-      whistleCount = 0;
-      whistleActive = false;
-      countingEnabled = true;
-      updateCount();
-      setDetectorState("Listening", true);
-      updateStatus("Counter reset. Waiting for a whistle.", true);
-
-      // If we already have mic access, resume analysis loop.
-      if (analyser && audioContext && audioContext.state !== "closed") {
-        if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
-        detectWhistle();
-      }
-    }
-
-    function getBandEnergy() {
-      analyser.getByteFrequencyData(frequencyData);
-
-      const binWidth = audioContext.sampleRate / analyser.fftSize;
-      const lowIndex = Math.max(0, Math.floor(TARGET_LOW_HZ / binWidth));
-      const highIndex = Math.min(frequencyData.length - 1, Math.ceil(TARGET_HIGH_HZ / binWidth));
-
-      let sum = 0;
-      let count = 0;
-      for (let i = lowIndex; i <= highIndex; i += 1) {
-        sum += frequencyData[i];
-        count += 1;
-      }
-
-      return count > 0 ? (sum / count) / 255 : 0;
-    }
-
-    function detectWhistle() {
-      if (!countingEnabled) return;
-
-      const bandEnergy = getBandEnergy();
-      energyTextEl.textContent = bandEnergy.toFixed(2);
-      energyMeterEl.style.width = `${Math.min(100, bandEnergy * 100)}%`;
-
-      if (!whistleActive && bandEnergy >= START_THRESHOLD) {
-        whistleActive = true;
-        whistleCount += 1;
-        updateCount();
-        setDetectorState("Whistle", true);
-        updateStatus(`Whistle detected. Total count: ${whistleCount}.`, true);
-
-        if (whistleCount >= targetWhistles) {
-          countingEnabled = false;
-          setDetectorState("Target Reached", true);
-          updateStatus(`Target reached (${targetWhistles}). Alarm ringing.`, true);
-          startAlarm();
-          return;
-        }
-      } else if (whistleActive && bandEnergy <= STOP_THRESHOLD) {
-        whistleActive = false;
-        setDetectorState("Listening", true);
-        updateStatus("Listening for the next whistle.", true);
-      } else if (!whistleActive) {
-        setDetectorState("Listening", true);
-      }
-
-      animationFrameId = window.requestAnimationFrame(detectWhistle);
-    }
-
-    async function startListening() {
-      startButton.disabled = true;
-      updateStatus("Requesting microphone access...");
-
-      try {
-        promptForTargetIfNeeded();
-
-        microphoneStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-        audioContext = new AudioContext();
-        await audioContext.resume();
-
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = FFT_SIZE;
-        analyser.smoothingTimeConstant = 0.75;
-
-        source = audioContext.createMediaStreamSource(microphoneStream);
-        source.connect(analyser);
-
-        frequencyData = new Uint8Array(analyser.frequencyBinCount);
-        resetButton.disabled = false;
-        countingEnabled = true;
-
-        updateStatus("Microphone connected. Whistle into the mic to start counting.", true);
-        setDetectorState("Listening", true);
-
-        if (animationFrameId) {
-          window.cancelAnimationFrame(animationFrameId);
-        }
-        detectWhistle();
-      } catch (error) {
-        console.error(error);
-        startButton.disabled = false;
-        updateStatus("Microphone access failed. Check browser permissions and try again.");
-        setDetectorState("Error");
-      }
-    }
-
-    startButton.addEventListener("click", startListening);
-    resetButton.addEventListener("click", resetCount);
-    stopAlarmButton.addEventListener("click", () => {
-      stopAlarm();
-      updateStatus("Alarm stopped. Click Reset Count to start counting again.", true);
-      setDetectorState("Paused");
-    });
-    setTargetButton.addEventListener("click", () => {
-      setTarget(targetInputEl.value);
-      updateStatus(`Target set to ${targetWhistles}.`, true);
-    });
-
-    window.addEventListener("beforeunload", () => {
-      stopAlarm();
-      if (animationFrameId) {
-        window.cancelAnimationFrame(animationFrameId);
-      }
-      if (microphoneStream) {
-        microphoneStream.getTracks().forEach((track) => track.stop());
-      }
-      if (audioContext) {
-        audioContext.close();
-      }
-    });
-
-    if (window.location.protocol === "file:") {
-      updateStatus("Open this app through http://localhost, not directly as a file, so microphone access will work.");
-      setDetectorState("Serve Locally");
-    }
-
-    setTarget(targetWhistles);
-    updateCount();
-  </script>
-</body>
+    <script type="module" src="./app.js"></script>
+  </body>
 </html>
